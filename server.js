@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const PORT = 8000;
 
 const loggerMiddleware = require('./middlewares/logger.js');
 const errorHandler = require('./middlewares/errorHandler.js');
@@ -23,27 +22,8 @@ app.get('/', (req, res) => {
 app.use((req, res, next) => {
     res.status(404).json({
         sucesso: false,
-        mensagem: `Rota '${req.url}' não encontrada na API do Haruy Sushi.`
+        mensagem: `Rota '${req.url}' não encontrada na API do IL Forno.`
     });
 });
 
-app.listen(PORT, () => {
-    console.log('');
-    console.log('🚀 ================================');
-    console.log(`🚀 Servidor rodando!`);
-    console.log(`🚀 Acesse: http://localhost:${PORT}`);
-    console.log('🚀 ================================');
-    console.log('');
-    console.log('📋 Rotas disponíveis:');
-    console.log(`   GET    http://localhost:${PORT}/api/categorias`);
-    console.log(`   POST   http://localhost:${PORT}/api/categorias`);
-    console.log(`   GET    http://localhost:${PORT}/api/produtos`);
-    console.log(`   GET    http://localhost:${PORT}/api/produtos/:id`);
-    console.log(`   POST   http://localhost:${PORT}/api/produtos`);
-    console.log(`   PUT    http://localhost:${PORT}/api/produtos/:id`);
-    console.log(`   DELETE http://localhost:${PORT}/api/produtos/:id`);
-    console.log('');
-    console.log('💣 Rota de teste de erro:');
-    console.log(`   GET    http://localhost:${PORT}/api/produtos/erro-teste`);
-    console.log('');
-});
+module.exports = app;
