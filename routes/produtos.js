@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../data/supabase');
 
-router.get('/erro-teste', (req, res) => {
-    throw new Error('Teste de Erro :(')
+router.get('/erro-teste', (req, res, next) => {
+    next(new Error('Teste de Erro :('));
 });
 
 router.get('/', async (req, res) => {
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
             preco: req.body.preco,
             imagem: req.body.imagem
         }
-    ]);
+    ]).select();
     if (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const produtoID = parseInt(req.params.id);
-    const { data, error } = await db.from('produtos').update(req.body).eq('id', produtoID);
+    const { data, error } = await db.from('produtos').update(req.body).eq('id', produtoID).select(); // ✅ idem
     if (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -49,7 +49,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     const produtoID = parseInt(req.params.id);
-    const { data, error } = await db.from('produtos').delete().eq('id', produtoID);
+    const { error } = await db.from('produtos').delete().eq('id', produtoID);
     if (error) {
         return res.status(500).json({ error: error.message });
     }

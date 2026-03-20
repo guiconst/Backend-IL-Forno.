@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const { data, error } = await db.from('categorias').insert([
         { nome: req.body.nome }
-    ]);
+    ]).select();
     if (error) {
         return res.status(500).json({ error: error.message });
     }
