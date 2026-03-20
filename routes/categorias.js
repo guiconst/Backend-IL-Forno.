@@ -1,21 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../data/database');
+const db = require('../data/supabase');
 
 router.get('/', async (req, res) => {
-    res.json(db.categorias);
+    const { data, error } = await db.from('categorias').select('*');
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+    res.json(data);
 });
 
 router.post('/', async (req, res) => {
-    const novaCategoria = {
-        id: db.categorias.length + 1,
-        nome: req.body.nome
-    };
-    db.categorias.push(novaCategoria);
-    res.status(201).json(novaCategoria);
+    const { data, error } = await db.from('categorias').insert([
+        { nome: req.body.nome }
+    ]);
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+    res.status(201).json(data[0]);
 });
 
 module.exports = router;
-
-// * URL: http://localhost:8000/api/categorias
-// * metodos: GET, POST, PUT, DELETE
